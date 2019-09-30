@@ -40,7 +40,7 @@ if adminPasswordAttempt == "iamroot":
 else:
     # they typed gykpmmr
     printFlowText("Incorrect password")
-    dialogue(helperName, "Wait a second, that looks like a Caesar cipher.")
+    dialogue(helperName, "Wait a second, that looks like a Caesar shift.")
     dialogue(helperName, 'Try shifting each letter up by one. For example, "a" to "b", "b" to "c", "z" to "a", etc.')
 
     adminPasswordAttempt = tryAdminPassword()
