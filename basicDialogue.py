@@ -5,6 +5,11 @@ import sys
 helperName = "Geoff"
 guestPrefix = "[guest@EscapeRAM]"
 adminPrefix = "[admin@EscapeRAM]"
+
+def inputFlush(*args, **kwargs):
+    sys.stdin.flush()
+    return input(*args, **kwargs)
+
 def printFlowText(text, delay=.05):
     for character in text:
         print(character, end="")
@@ -29,7 +34,7 @@ dialogue(helperName,  "Once you find the password, try to log in.")
 # make a piece of paper that says "definitely not a password: gykpmmr"
 def tryAdminPassword():
     terminalPrompt(guestPrefix, "su admin")
-    return input("Password: ").lower()
+    return inputFlush("Password: ").lower()
 adminPasswordAttempt = tryAdminPassword()
 while adminPasswordAttempt not in ["hzlqnns", "iamroot"]:
     printFlowText("Incorrect password")
@@ -59,17 +64,18 @@ def garbledText(length):
     sample = random.sample(sampleChars, length)
     return ''.join(sample)
 
+actualDecryptionKey = "3562515"
+actualDecryptionKeyPattern = r'\D*'.join(actualDecryptionKey)
+
 dialogue("AI", garbledText(16))
 dialogue(helperName, "What is that supposed to mean?")
 dialogue(helperName, "We probably have to decrypt what the AI is saying.")
-dialogue(helperName, "See if you can find an encryption key. It should be a sequence of numbers.")
+dialogue(helperName, "See if you can find an encryption key. It should be a " + str(len(actualDecryptionKey)) + "-digit sequence of numbers.")
 # now make some puzzle where they have to find a sequence of numbers
-actualDecryptionKey = "1837"
-actualDecryptionKeyPattern = r'\D*'.join(actualDecryptionKey)
 
 def tryDecryptionKey():
     terminalPrompt(adminPrefix, "run decrypt.exe")
-    return input("Decryption key: ")
+    return inputFlush("Decryption key: ")
 
 def isDecryptionKey(guess):
     match = re.fullmatch(actualDecryptionKeyPattern, guess)
@@ -96,7 +102,7 @@ dialogue("AI", "NO!")
 
 def tryShutdown():
     printFlowText("Would you like to destroy the AI?")
-    return input('Enter "yes" or "no"\n').lower()
+    return inputFlush('Enter "yes" or "no"\n').lower()
 
 shutdownAttempt = tryShutdown()
 while shutdownAttempt not in ["yes", "no"]:
