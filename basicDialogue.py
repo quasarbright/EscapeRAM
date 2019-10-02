@@ -2,6 +2,7 @@ import re
 import random
 import time
 import sys
+import os
 helperName = "Geoff"
 guestPrefix = "[guest@EscapeRAM]"
 adminPrefix = "[admin@EscapeRAM]"
@@ -25,6 +26,31 @@ def dialogue(characterName, message):
 def terminalPrompt(prefix, command):
     print(prefix + " ", end='')
     printFlowText(command)
+
+# flash drive
+
+
+def garbledText(length):
+    '''Returns random text of the given length
+    '''
+    sampleChars = "!@#$%^&*()_+-=[]qwepoirutyasdfghjklzxcvbnm<>"
+    sample = ''.join([random.sample(sampleChars, 1)[0] for i in range(length)])
+    return ''.join(sample)
+
+def flash_drive_exists():
+	if (sys.platform == "win32"):
+		result = os.popen("wmic logicaldisk where drivetype=2").read()
+		return result.find(":") != -1
+	else:
+		result = os.popen("df -l").read()
+		return result.find("/Volumes/NO") != -1
+
+while not flash_drive_exists():
+    print(garbledText(random.randint(80, 101)))
+    time.sleep(.05)
+
+print('\n'*100)
+
 
 dialogue(helperName,  "A rogue AI has trapped you in this room! You have to destroy it to escape.")
 dialogue(helperName, "I'm " + helperName + ". I'm going to help you get out of here.")
@@ -56,13 +82,6 @@ else:
 
 # now they're logged in as admin
 dialogue(helperName, "We're in.")
-
-def garbledText(length):
-    '''Returns random text of the given length
-    '''
-    sampleChars = "!@#$%^&*()_+-=[]qwepoirutyasdfghjklzxcvbnm<>"
-    sample = random.sample(sampleChars, length)
-    return ''.join(sample)
 
 actualDecryptionKey = "3562515"
 actualDecryptionKeyPattern = r'\D*'.join(actualDecryptionKey)
